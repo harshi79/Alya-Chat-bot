@@ -19,6 +19,7 @@ export type BrainMode = 'auto' | 'fast' | 'deep';
 
 export interface UserSettings {
   replyLanguage: ReplyLanguage;
+  langChosen: boolean;
   voice: VoiceMode;
   brain: BrainMode;
   showThoughts: boolean;
@@ -30,6 +31,7 @@ export interface UserSettings {
 
 export const DEFAULT_USER_SETTINGS: UserSettings = {
   replyLanguage: 'hinglish',
+  langChosen: false,
   voice: 'auto',
   brain: 'auto',
   showThoughts: false,

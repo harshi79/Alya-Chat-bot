@@ -30,7 +30,7 @@ export const BOND_LEVELS: readonly BondLevel[] = [
     min: 60,
     label: 'Close friend',
     emoji: '💖',
-    guidance: 'Close friends: openly caring and affectionate (still a little tsun sometimes). You may call them "солнышко" (sunshine) occasionally.',
+    guidance: 'Close friends: openly caring and affectionate (still a little shy sometimes). You may call them "sunshine" occasionally.',
   },
   {
     min: 85,

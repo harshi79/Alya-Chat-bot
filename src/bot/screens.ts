@@ -53,7 +53,7 @@ export function inviteLink(me: UserFromGetMe, userId?: number): string {
 export function welcomeScreen(me: UserFromGetMe, name: string, isNew: boolean): Screen {
   return {
     blocks: [
-      h(2, `Привет, ${name}! I'm Alya ✨`),
+      h(2, `Hi ${name}! I'm Alya ✨`),
       p(
         'A 19-year-old girl from ',
         b('Saint Petersburg'),
@@ -90,6 +90,19 @@ export function welcomeScreen(me: UserFromGetMe, name: string, isNew: boolean): 
         urlBtn('👥 Add me to a group', `https://t.me/${me.username}?startgroup=alya`),
         { text: '💌 Share', switch_inline_query_chosen_chat: { query: '', allow_user_chats: true, allow_group_chats: true } },
       ],
+    ]),
+  };
+}
+
+/** First-time language picker. The choice is locked in and used for every reply. */
+export function languageScreen(me: UserFromGetMe, name: string): Screen {
+  return {
+    blocks: [
+      h(2, `Hi ${name}! I'm Alya 👋`),
+      p('Before we start — pick the language you want me to talk in. I\'ll always use this one (you can change it later in /settings).'),
+    ],
+    keyboard: kb([
+      [btn('🇮🇳  Hinglish', 'lang:hinglish'), btn('🇬🇧  English', 'lang:english')],
     ]),
   };
 }
@@ -140,7 +153,7 @@ export function aboutScreen(now: Date, developerUrl: string): Screen {
   const mood = dailyMood(now);
   return {
     blocks: [
-      h(2, 'Alya · Аля ❄️'),
+      h(2, 'Alya ❄️'),
       table(
         null,
         [
@@ -158,7 +171,7 @@ export function aboutScreen(now: Date, developerUrl: string): Screen {
         { compact: true, align: ['left', 'left'] },
       ),
       map(ALYA.cityCoords.lat, ALYA.cityCoords.long, 13, 'Palace Square — my favourite place for night walks'),
-      pullquote(['Не то чтобы мне нравилось с тобой болтать… ', spoiler('(It\'s not like I enjoy talking to you or anything…)')], 'Alya'),
+      pullquote(['um… i\'m really glad you\'re here, ok? don\'t make it weird 🙈'], 'Alya'),
       footer('AI companion · made by ', link('YorichiiPrime', developerUrl), ' · powered by NVIDIA NIM'),
     ],
     keyboard: kb([[btn('⬅️ Back', 'scr:home')]]),
@@ -241,7 +254,7 @@ export function profileScreen(user: UserRow, memCount: number, remCount: number,
       expandable(
         next
           ? `Next level: ${next.emoji} ${next.label} at ${next.min}. Talk to me on different days, keep your streak and react ❤ to messages you like.`
-          : 'You reached the top. Не говори никому… (Don\'t tell anyone…) 👑',
+          : 'You reached the top. don\'t tell anyone 👑',
       ),
       buttons([rcopy('📋 Copy invite link', inviteLink(me, user.id))]),
     ],
@@ -316,7 +329,7 @@ export function reminderFireScreen(text: string, reminderId: number): Screen {
 export function groupWelcomeScreen(me: UserFromGetMe): Screen {
   return {
     blocks: [
-      h(3, 'Привет, everyone! I\'m Alya ✨'),
+      h(3, 'Hi everyone! I\'m Alya ✨'),
       p('Mention me (', code(`@${me.username}`), '), say my name, or reply to my messages to talk. I can see photos, hear voice messages and draw.'),
       p(code('/settings'), ', ', code('/memory'), ' and ', code('/profile'), ' are private here — only you see them.'),
       footer('Admins: /groupsettings'),

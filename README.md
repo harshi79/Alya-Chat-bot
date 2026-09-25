@@ -1,6 +1,6 @@
 # Alya ❄️ — an advanced Telegram AI companion
 
-> *Привет! I'm Alya — 19, from Saint Petersburg. I study math & CS, drink far too much tea, and I'll remember what you tell me.*
+> *Hi! I'm Alya — a shy 19-year-old from Saint Petersburg. I study math & CS, drink far too much tea, and I'll remember what you tell me.*
 
 Alya is a feature-complete Telegram chatbot built on **everything free in the Bot API up to 10.3** (August 2026). It needs no Telegram Premium. Every thought, word, glance and drawing comes from **NVIDIA NIM**: one free `nvapi-` key, no other AI providers.
 
@@ -10,14 +10,14 @@ Alya is a feature-complete Telegram chatbot built on **everything free in the Bo
 - **Eyes**: photos, screenshots, homework, GIFs and short videos.
 - **Drawing** with FLUX, **quizzes** as real quiz polls, and **dice** games.
 - **Reminders** that show times in *your* timezone (`date_time` entities, 9.5).
-- **Hinglish-first chat**: replies default to Hindi mixed with English in Latin letters. Clear English messages switch replies to English for that person; Hindi/Hinglish switches them back. The choice is saved per Telegram user across chats and restarts, not per group. Short acknowledgements, emoji and uncaptioned media keep the existing choice. This applies to AI replies; command screens and fixed status/error messages remain unchanged.
+- **Pick your language on `/start`**: the very first time you talk to Alya she asks you to choose between **Hinglish** and **English**. That choice is locked in and saved per Telegram user across chats and restarts — she always replies in the language you picked, so no more surprise switches. (You can still change it later with `/settings`, or just ask her to switch.)
 - **Memory**: she remembers facts about you, summarizes long chats, and you can view or delete everything.
 - **Works anywhere**:
   - in private chats, with optional separate topics that she titles herself (9.3/9.4);
   - in groups, where personal commands are **ephemeral** so only you see them (10.2/10.3);
   - in **guest mode**, when you @mention her in chats she isn't a member of (10.0);
   - in **inline mode**, via `@alya question` in any chat.
-- **A real personality**: a mood that follows Saint Petersburg time, a friendship "bond" that grows, daily streaks, reactions and message effects. When she's flustered she mutters in Russian, with the translation hidden in a spoiler.
+- **A real personality**: a shy, slightly awkward girl who warms up as you talk — short, casual GenZ-style replies, not a robot. A mood that follows Saint Petersburg time, a friendship "bond" that grows, daily streaks, reactions and message effects. She keeps it wholesome and never speaks Russian.
 
 ---
 
@@ -25,14 +25,14 @@ Alya is a feature-complete Telegram chatbot built on **everything free in the Bo
 
 | | |
 |---|---|
-| **Full name** | Alina Sergeyevna Volkova — "Alya" (Аля) |
+| **Full name** | Alina Sergeyevna Volkova — "Alya" |
 | **Age** | 19 · born January 7 (Orthodox Christmas) |
 | **From** | Saint Petersburg, Russia — Vasilyevsky Island |
 | **Studies** | Applied Mathematics & Computer Science, SPbU (2nd year) |
 | **Family** | Mom (literature teacher), little brother Misha, dad (ship engineer, often at sea) |
 | **Cat** | Pelmeni — grey, fluffy, walks across her keyboard |
 | **Loves** | Winter, White Nights, tea with raspberry jam, blini, piano (Tchaikovsky's *December*), Bulgakov, anime (she won't admit how much), chess |
-| **Personality** | Cool, proud, teasing top student outside; warm, caring and easily flustered inside |
+| **Personality** | Shy, a little awkward, but warm and caring once she warms up. Quiet, genuine, easily flustered — short, casual GenZ replies |
 
 She knows what time it is in Piter (sleepy at 2 am, grumpy before tea, cozy in the evening) and has a daily mood. She celebrates New Year and March 8, and her own birthday on January 7. She's honest when sincerely asked whether she's an AI, and she keeps things wholesome.
 
@@ -202,4 +202,4 @@ The test suite needs no network. [`test/mock-telegram.ts`](test/mock-telegram.ts
 
 Made by **YorichiiPrime** ([t.me/WhoEvenYori](https://t.me/WhoEvenYori)). Built with [grammY](https://grammy.dev) and powered by [NVIDIA NIM](https://build.nvidia.com). BSD-2-Clause licensed — see [LICENSE](LICENSE).
 
-*Не то чтобы я хотела, чтобы ты поставил звёздочку…* ||(It's not like I want you to star the repo or anything…)||
+*um… i'd be really happy if you starred the repo, ok? don't make it weird 🙈* ||(It's not like I want you to star the repo or anything…)||

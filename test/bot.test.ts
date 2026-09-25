@@ -329,15 +329,32 @@ describe('guest mode & inline mode', () => {
 });
 
 describe('screens, settings and callbacks', () => {
-  it('/start shows the rich welcome screen with one primary button and a party effect for new users', async () => {
+  it('/start asks for a language, then shows the welcome screen', async () => {
     await h.send(privateText('/start'));
     await h.settle();
-    const sent = h.tg.callsOf('sendRichMessage')[0]!;
-    expect(sent.payload.message_effect_id).toBe('5046509860389126442');
-    const blocks = (sent.payload.rich_message as { blocks: Array<{ type: string }> }).blocks;
+    // First, a new user is asked to pick a language.
+    const picker = h.tg.callsOf('sendRichMessage')[0]!;
+    const pickerButtons = (picker.payload.reply_markup as { inline_keyboard: Array<Array<{ callback_data?: string }>> }).inline_keyboard.flat();
+    expect(pickerButtons.map((b) => b.callback_data)).toEqual(expect.arrayContaining(['lang:hinglish', 'lang:english']));
+
+    // Picking a language locks it in and reveals the welcome screen.
+    await h.send({
+      callback_query: {
+        id: 'cb1',
+        from: { id: 42, is_bot: false, first_name: 'Rahul' },
+        chat_instance: 'x',
+        data: 'lang:english',
+        message: { message_id: 100, date: 0, chat: { id: 42, type: 'private', first_name: 'Rahul' } },
+      },
+    } as never);
+    await h.settle();
+    const edit = h.tg.callsOf('editMessageText').at(-1)!;
+    const blocks = (edit.payload.rich_message as { blocks: Array<{ type: string }> }).blocks;
     expect(blocks.map((b) => b.type)).toEqual(expect.arrayContaining(['heading', 'paragraph', 'table', 'details', 'footer']));
-    const buttons = (sent.payload.reply_markup as { inline_keyboard: Array<Array<{ style?: string }>> }).inline_keyboard.flat();
+    const buttons = (edit.payload.reply_markup as { inline_keyboard: Array<Array<{ style?: string }>> }).inline_keyboard.flat();
     expect(buttons.filter((b) => b.style === 'primary')).toHaveLength(1);
+    expect(h.app.store.getUser(42)?.settings.langChosen).toBe(true);
+    expect(h.app.store.getUser(42)?.settings.replyLanguage).toBe('english');
   });
 
   it('settings: toggling voice updates the DB and re-renders with a disabled current choice', async () => {
