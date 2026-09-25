@@ -35,6 +35,7 @@ import {
   groupSettingsScreen,
   groupWelcomeScreen,
   helpScreen,
+  languageScreen,
   memoryScreen,
   privateOnlyScreen,
   profileScreen,
@@ -354,7 +355,7 @@ async function drawImage(app: App, ctx: Context, prompt: string): Promise<void> 
   const threadId = threadOf(ctx.msg);
   const userId = ctx.from!.id;
   if (imagePromptProblem(prompt)) {
-    await ctx.reply('Ты что?! I\'m not drawing that 😤');
+    await ctx.reply('no way, i\'m not drawing that 😤');
     return;
   }
   const day = dayKey(new Date(), app.cfg.defaultTimezone);
@@ -441,6 +442,10 @@ function registerHandlers(bot: Bot, app: App, queue: ConvQueue<Job>): void {
     if (target) {
       const scr = screenFor(app, target, user);
       if (scr) return showScreen(app, ctx, scr);
+    }
+    // Ask for the language first if the user hasn't chosen it yet.
+    if (!user.settings.langChosen) {
+      return showScreen(app, ctx, languageScreen(app.me, ctx.from!.first_name));
     }
     const scr = welcomeScreen(app.me, ctx.from!.first_name, isNew);
     if (isNew) scr.effect = EFFECTS.party;
@@ -568,6 +573,13 @@ function registerHandlers(bot: Bot, app: App, queue: ConvQueue<Job>): void {
           });
           return;
         }
+        case 'lang': {
+          const lang: 'hinglish' | 'english' = a1 === 'english' ? 'english' : 'hinglish';
+          app.store.updateUserSettings(from.id, { replyLanguage: lang, langChosen: true });
+          await ctx.answerCallbackQuery({ text: lang === 'english' ? 'English it is ✨' : 'Hinglish it is ✨' });
+          await editFromCallback(app, ctx, welcomeScreen(app.me, from.first_name, false));
+          return;
+        }
         case 'scr': {
           await ctx.answerCallbackQuery();
           const scr = screenFor(app, a1 ?? 'home', user);
@@ -655,7 +667,7 @@ function registerHandlers(bot: Bot, app: App, queue: ConvQueue<Job>): void {
             await ctx.answerCallbackQuery({ text: `💤 Okay, ${mins} more minutes` });
             if (orig) await app.api.editMessageReplyMarkup(chat.id, orig.message_id, { reply_markup: { inline_keyboard: [] } }).catch(() => undefined);
           } else if (a1 === 'done') {
-            await ctx.answerCallbackQuery({ text: 'Молодец! ✅' });
+            await ctx.answerCallbackQuery({ text: 'good job! ✅' });
             const orig = ctx.callbackQuery.message;
             if (orig && ctx.chat) await app.api.editMessageReplyMarkup(ctx.chat.id, orig.message_id, { reply_markup: { inline_keyboard: [] } }).catch(() => undefined);
           }
@@ -665,7 +677,7 @@ function registerHandlers(bot: Bot, app: App, queue: ConvQueue<Job>): void {
           if (a1 === 'yes') {
             app.store.deleteUserData(from.id);
             await ctx.answerCallbackQuery({ text: 'Everything deleted.' });
-            await editFromCallback(app, ctx, { blocks: [{ type: 'paragraph', text: 'Done — I deleted everything about you. If you ever come back, we start fresh. Пока… 🥺' }] });
+            await editFromCallback(app, ctx, { blocks: [{ type: 'paragraph', text: 'Done — I deleted everything about you. If you ever come back, we start fresh. bye… 🥺' }] });
           }
           return;
         }
@@ -896,7 +908,7 @@ function registerHandlers(bot: Bot, app: App, queue: ConvQueue<Job>): void {
       const mentioned =
         (msg.entities ?? msg.caption_entities ?? []).some((e) => e.type === 'mention' && text.slice(e.offset, e.offset + e.length).toLowerCase() === `@${app.me.username.toLowerCase()}`) ||
         text.toLowerCase().includes(`@${app.me.username.toLowerCase()}`);
-      const byName = chat?.settings.replyMode !== 'mention' && /(^|[^\p{L}])(alya|аля|алья)([^\p{L}]|$)/iu.test(text);
+      const byName = chat?.settings.replyMode !== 'mention' && /(^|[^\p{L}])(alya)([^\p{L}]|$)/iu.test(text);
       const addressed = mentioned || incoming.repliedToBot || byName;
       if (!addressed) {
         if (text && !incoming.media) {

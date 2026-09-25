@@ -99,7 +99,7 @@ async function runDeferred(app: App, req: TurnRequest, items: Deferred[]): Promi
       } else if (d.type === 'image') {
         const problem = imagePromptProblem(d.prompt);
         if (problem) {
-          await app.api.sendMessage(chatId, 'Ты что?! I\'m not drawing that 😤', { message_thread_id: req.threadId });
+          await app.api.sendMessage(chatId, 'no way, i\'m not drawing that 😤', { message_thread_id: req.threadId });
           continue;
         }
         const day = dayKey(new Date(), app.cfg.defaultTimezone);
@@ -189,8 +189,9 @@ export async function runTurn(app: App, req: TurnRequest): Promise<TurnResult> {
   // Synthetic openers, retries and media descriptions must not reset it.
   const languageText = req.getLanguageText?.();
   const previousLanguage = app.store.getUser(req.from.id)?.settings.replyLanguage ?? 'hinglish';
+  const chosen = Boolean(user?.settings.langChosen);
   const replyLanguage = req.mode === 'normal' && languageText !== undefined
-    ? resolveReplyLanguage(languageText, previousLanguage)
+    ? resolveReplyLanguage(languageText, previousLanguage, !chosen)
     : previousLanguage;
   if (user && replyLanguage !== previousLanguage) app.store.updateUserSettings(user.id, { replyLanguage });
 

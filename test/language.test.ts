@@ -143,3 +143,25 @@ describe('per-user language persistence', () => {
     expectLanguage('Hinglish');
   });
 });
+
+describe('locked language after the /start picker', () => {
+  it('keeps the chosen language even when the user writes in the other language', async () => {
+    h = await harness();
+    h.app.store.upsertUser({ id: 42, first_name: 'Rahul' });
+    h.app.store.updateUserSettings(42, { replyLanguage: 'english', langChosen: true });
+    await h.send(privateText('kaise ho? tumhara naam kya hai?'));
+    await h.settle();
+    expectLanguage('English');
+    expect(h.app.store.getUser(42)?.settings.replyLanguage).toBe('english');
+  });
+
+  it('still honors an explicit switch request once the choice is locked', async () => {
+    h = await harness();
+    h.app.store.upsertUser({ id: 42, first_name: 'Rahul' });
+    h.app.store.updateUserSettings(42, { replyLanguage: 'english', langChosen: true });
+    await h.send(privateText('please reply in Hinglish'));
+    await h.settle();
+    expectLanguage('Hinglish');
+    expect(h.app.store.getUser(42)?.settings.replyLanguage).toBe('hinglish');
+  });
+});

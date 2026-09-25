@@ -49,9 +49,9 @@ export async function syncCommands(api: Api, opts: { profile: boolean }): Promis
       );
     }
     if (opts.profile) {
-      await api.setMyShortDescription('Alya ❄️ 19, Saint Petersburg. Chat, voice, photos, drawings, reminders — powered by NVIDIA.');
+      await api.setMyShortDescription('Alya ❄️ 19, a shy girl from Saint Petersburg. Chat, voice, photos, drawings, reminders — powered by NVIDIA.');
       await api.setMyDescription(
-        "Привет! I'm Alya — a 19-year-old girl from Saint Petersburg who studies math & CS and drinks too much tea ☕\n\nTalk to me about anything: I stream my replies live, understand voice messages and photos, draw pictures, set reminders and remember what matters to you.\n\nWorks in groups, inline and even in chats I'm not in (guest mode). Tap Start!",
+        "Hi! I'm Alya — a shy 19-year-old girl from Saint Petersburg who studies math & CS and drinks too much tea ☕\n\nTalk to me about anything: I stream my replies live, understand voice messages and photos, draw pictures, set reminders and remember what matters to you.\n\nWorks in groups, inline and even in chats I'm not in (guest mode). Tap Start!",
       );
     }
     log.info('bot commands synced');
