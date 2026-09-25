@@ -147,7 +147,7 @@ function compose(parts: Array<string | undefined>): string {
 }
 
 /** Build the "perception" of an incoming message: how to turn it into model input. */
-export function perceive(app: App, inc: Incoming): Perception {
+export function perceive(app: App, inc: Incoming, onVoiceTranscript?: (text: string) => void): Perception {
   const extras: string[] = [];
   const m = inc.media;
   const caption = inc.text;
@@ -182,6 +182,7 @@ export function perceive(app: App, inc: Incoming): Perception {
           const audio = await downloadFile(app, m.fileId as string, MAX_AUDIO_BYTES);
           const transcript = (await app.senses.transcribe(audio, m.mime ?? 'audio/ogg', m.fileName ?? 'audio.ogg', signal)).trim();
           if (!transcript) return compose([ctx, `[sent a ${isVoice ? 'voice message' : 'audio file'} but it was silent / unintelligible]`, caption]);
+          if (isVoice) onVoiceTranscript?.(transcript);
           extras.push(`<details><summary>🎙 ${isVoice ? 'What I heard' : 'Transcript'}</summary>\n\n${truncate(transcript.replace(/<[^>]+>/g, ''), 3000)}\n\n</details>`);
           return compose([ctx, isVoice ? `(voice message) ${transcript}` : `[sent an audio file${m.describe ? ` "${m.describe}"` : ''}] Transcript: ${transcript}`, caption]);
         },

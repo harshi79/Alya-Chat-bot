@@ -10,6 +10,7 @@ Alya is a feature-complete Telegram chatbot built on **everything free in the Bo
 - **Eyes**: photos, screenshots, homework, GIFs and short videos.
 - **Drawing** with FLUX, **quizzes** as real quiz polls, and **dice** games.
 - **Reminders** that show times in *your* timezone (`date_time` entities, 9.5).
+- **Hinglish-first chat**: replies default to Hindi mixed with English in Latin letters. Clear English messages switch replies to English for that person; Hindi/Hinglish switches them back. The choice is saved per Telegram user across chats and restarts, not per group. Short acknowledgements, emoji and uncaptioned media keep the existing choice. This applies to AI replies; command screens and fixed status/error messages remain unchanged.
 - **Memory**: she remembers facts about you, summarizes long chats, and you can view or delete everything.
 - **Works anywhere**:
   - in private chats, with optional separate topics that she titles herself (9.3/9.4);
