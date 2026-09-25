@@ -173,7 +173,10 @@ async function processJobs(app: App, conv: string, batch: Job[]): Promise<void> 
       });
     }
 
-    const perception = job.incoming ? perceive(app, job.incoming) : { extras: [] as string[], voiceIn: false, status: undefined, process: undefined, statKey: undefined };
+    let languageText = job.incoming?.text;
+    const perception = job.incoming ? perceive(app, job.incoming, (transcript) => {
+      languageText = [transcript, job.incoming?.text].filter(Boolean).join('\n');
+    }) : { extras: [] as string[], voiceIn: false, status: undefined, process: undefined, statKey: undefined };
     if (perception.statKey) app.store.incStat(perception.statKey);
     const baseText = job.reply?.prompt ?? job.synthetic ?? '';
     await runTurn(app, {
@@ -184,6 +187,7 @@ async function processJobs(app: App, conv: string, batch: Job[]): Promise<void> 
       threadId: job.threadId,
       conv,
       userText: baseText,
+      getLanguageText: () => languageText,
       extras: perception.extras,
       sink,
       gen,

@@ -8,6 +8,7 @@ import { mkdirSync } from 'node:fs';
 import { dirname } from 'node:path';
 import type { DatabaseSync, SQLInputValue } from 'node:sqlite';
 import { shortId } from '../util/text.js';
+import type { ReplyLanguage } from '../persona/language.js';
 
 const require = createRequire(import.meta.url);
 
@@ -17,6 +18,7 @@ export type VoiceMode = 'off' | 'auto' | 'always';
 export type BrainMode = 'auto' | 'fast' | 'deep';
 
 export interface UserSettings {
+  replyLanguage: ReplyLanguage;
   voice: VoiceMode;
   brain: BrainMode;
   showThoughts: boolean;
@@ -27,6 +29,7 @@ export interface UserSettings {
 }
 
 export const DEFAULT_USER_SETTINGS: UserSettings = {
+  replyLanguage: 'hinglish',
   voice: 'auto',
   brain: 'auto',
   showThoughts: false,

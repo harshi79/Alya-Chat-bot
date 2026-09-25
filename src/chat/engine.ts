@@ -11,6 +11,7 @@ import { runTool, toolDefs, type Deferred, type ToolEnv, type ToolOutcome } from
 import { logger } from '../log.js';
 import { buildSystemPrompt, type ChatKind } from '../persona/alya.js';
 import { lines } from '../persona/lines.js';
+import { resolveReplyLanguage } from '../persona/language.js';
 import { voiceEmotion } from '../persona/mood.js';
 import { sanitizeModelMarkdown } from '../rich/sanitize.js';
 import { tgDescription } from '../util/tgerrors.js';
@@ -32,6 +33,8 @@ export interface TurnRequest {
   conv: string;
   /** Text given to the model for this turn (media already turned into descriptions). */
   userText: string;
+  /** Only the sender's own text/caption/voice transcript, available after prepare. */
+  getLanguageText?: () => string | undefined;
   /** Markdown appended to the delivered answer only (e.g. a transcript <details>). */
   extras?: string[];
   sink: Sink;
@@ -182,6 +185,15 @@ export async function runTurn(app: App, req: TurnRequest): Promise<TurnResult> {
     return { text: '', stopped: false, failed: true };
   }
 
+  // Persist only a language label, never private text, across chats and restarts.
+  // Synthetic openers, retries and media descriptions must not reset it.
+  const languageText = req.getLanguageText?.();
+  const previousLanguage = app.store.getUser(req.from.id)?.settings.replyLanguage ?? 'hinglish';
+  const replyLanguage = req.mode === 'normal' && languageText !== undefined
+    ? resolveReplyLanguage(languageText, previousLanguage)
+    : previousLanguage;
+  if (user && replyLanguage !== previousLanguage) app.store.updateUserSettings(user.id, { replyLanguage });
+
   // ---- context
   const tz = user?.timezone ?? null;
   // Long-term memories are private: only inject them where nobody else can read the answer.
@@ -201,6 +213,7 @@ export async function runTurn(app: App, req: TurnRequest): Promise<TurnResult> {
     kind: req.kind,
     userName: req.from.first_name || 'friend',
     nickname: settings?.nickname,
+    replyLanguage,
     bond: user?.bond ?? 0,
     streak: user?.streak ?? 0,
     daysTalked: user?.days_talked ?? 0,
