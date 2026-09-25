@@ -1,0 +1,34 @@
+# Render blueprint — https://render.com/docs/blueprint-spec
+# Render → New → Blueprint → pick this repo, then fill in BOT_TOKEN and NVIDIA_API_KEY.
+#
+# Persistent disks need a paid instance (starter). On the FREE plan:
+#   1. change `plan: starter` to `plan: free` and delete the `disk:` block
+#      (memories/history then reset on every deploy),
+#   2. set WEBHOOK_URL to your service URL (https://<name>.onrender.com) so
+#      Telegram wakes the service when a message arrives.
+services:
+  - type: web
+    name: alya-chat-bot
+    runtime: node
+    plan: starter
+    region: frankfurt
+    buildCommand: npm ci --include=dev && npm run build
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: BOT_TOKEN
+        sync: false
+      - key: NVIDIA_API_KEY
+        sync: false
+      - key: OWNER_ID
+        sync: false
+      - key: WEBHOOK_URL
+        sync: false
+      - key: DB_FILE
+        value: /var/data/alya.db
+    disk:
+      name: alya-data
+      mountPath: /var/data
+      sizeGB: 1
