@@ -1,0 +1,50 @@
+{
+  "name": "alya-chat-bot",
+  "version": "1.0.0",
+  "description": "Alya — an advanced Telegram AI companion (Bot API 10.3 rich messages, streaming drafts, guest mode, ephemeral messages, voice) powered only by NVIDIA NIM.",
+  "type": "module",
+  "main": "dist/index.js",
+  "license": "BSD-2-Clause",
+  "author": "YorichiiPrime (https://t.me/WhoEvenYori)",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/harshi79/Alya-Chat-bot.git"
+  },
+  "engines": {
+    "node": ">=22.13"
+  },
+  "scripts": {
+    "dev": "tsx src/index.ts",
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/index.js",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "smoke": "npm run build && tsx test/smoke/run.ts dist",
+    "smoke:webhook": "npm run build && tsx test/smoke/run.ts dist --webhook",
+    "check": "npm run typecheck && npm test"
+  },
+  "dependencies": {
+    "@breezystack/lamejs": "^1.2.7",
+    "dotenv": "^18.0.3",
+    "grammy": "^1.46.0"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.2",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.2"
+  },
+  "keywords": [
+    "telegram",
+    "bot",
+    "ai",
+    "nvidia",
+    "nim",
+    "nemotron",
+    "grammy",
+    "rich-messages",
+    "companion",
+    "chatbot"
+  ]
+}
